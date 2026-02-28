@@ -113,9 +113,9 @@ fetch("https://script.google.com/macros/s/AKfycbyMvTXCxMTUB-A_xHUKm9ZZ_ws1ykH3D9
   body: JSON.stringify({
     ageGroup: ageGroup,
     smokingStatus: status,
-    monthsSmoked: monthsSmoked,
+    yearsSmoked: yearsSmoked,
     cigPerDay: cigPerDay,
-    quitMonths: quitMonths,
+    quitYears: quitYears,
     packYears: packYears.toFixed(1),
     uspstfEligible: uspstfEligible,
     researchScore: researchScore,
