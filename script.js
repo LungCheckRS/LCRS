@@ -1,6 +1,3 @@
-// ------------------------
-// Show/hide smoking details
-// ------------------------
 const smokingStatus = document.getElementById('smokingStatus');
 const smokingDetails = document.getElementById('smokingDetails');
 
@@ -12,23 +9,20 @@ smokingStatus.addEventListener('change', function () {
   }
 });
 
-// ------------------------
-// Calculate Risk
-// ------------------------
 function calculateRisk() {
-  // Get inputs
+  // Get all inputs
   const age = parseInt(document.getElementById('age').value) || 0;
   const status = document.getElementById('smokingStatus').value;
   const yearsSmoked = parseFloat(document.getElementById('yearsSmoked').value) || 0;
   const cigPerDay = parseInt(document.getElementById('cigPerDay').value) || 0;
-  const quitYears = parseFloat(document.getElementById('quitYears').value) || 0;  
+  const quitYears = parseFloat(document.getElementById('quitYears').value) || 0;
   const secondhand = document.getElementById('secondhand').value;
   const familyHistory = document.getElementById('familyHistory').value;
 
   // Calculate pack-years
   const packYears = (cigPerDay / 20) * yearsSmoked;
 
-  // USPSTF eligibility
+  // Check USPSTF eligibility
   let uspstfEligible = false;
   if (
     age >= 50 && age <= 80 &&
@@ -44,13 +38,13 @@ function calculateRisk() {
   let researchScore = 0;
 
   // Age weighting
-  if (age >= 60 && age <= 69) researchScore += 2;
+  if (age >= 60 && age < 70) researchScore += 2;
   if (age >= 70) researchScore += 3;
 
   // Pack-year weighting
   if (packYears >= 20 && packYears < 30) researchScore += 2;
-  else if (packYears >= 30 && packYears < 40) researchScore += 3;
-  else if (packYears >= 40) researchScore += 4;
+  if (packYears >= 30 && packYears < 40) researchScore += 3;
+  if (packYears >= 40) researchScore += 4;
 
   // Smoking weighting
   if (status === "current") researchScore += 3;
@@ -63,14 +57,13 @@ function calculateRisk() {
   if (secondhand === "yes") researchScore += 1;
   if (familyHistory === "yes") researchScore += 2;
 
-  // Risk category
   let riskCategory = "";
   if (researchScore <= 3) riskCategory = "Low Risk";
   else if (researchScore <= 6) riskCategory = "Moderate Risk";
   else riskCategory = "High Risk";
 
   // ------------------------
-  // Display Results
+  // Display results
   // ------------------------
   let resultHTML = `
     <div class="result-card">
@@ -112,9 +105,9 @@ function calculateRisk() {
   document.getElementById('result').innerHTML = resultHTML;
 
   // ------------------------
-  // Send data to Google Sheets
+  // Send to Google Sheet
   // ------------------------
-  fetch("https://script.google.com/macros/s/AKfycbyb65JLVeDr8gcm3f_9EgSjWpYXPxLzr3qf1xVYyXCwLoW2wZAb8xiBXmmQYd2Fgx-S/exec", {
+  fetch("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL", {
     method: "POST",
     body: JSON.stringify({
       age: age,
