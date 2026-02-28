@@ -107,7 +107,7 @@ function calculateRisk() {
   // ------------------------
   // Send to Google Sheet
   // ------------------------
-  fetch("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL", {
+  fetch("https://script.google.com/macros/s/AKfycbwo-VjCMqnCIqLpVdz4gusHthplvQQXisjZPS5ymJwPE2E7C47wWo07EwnJRd3Ti2zH/exec", {
     method: "POST",
     body: JSON.stringify({
       age: age,
