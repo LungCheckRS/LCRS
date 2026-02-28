@@ -15,15 +15,9 @@
 
       <h2>Section 1 of 2: General Info</h2>
 
-      <label for="ageGroup">Age Group:</label>
-      <select id="ageGroup" name="ageGroup" required>
-        <option value="">Select...</option>
-        <option value="18-39">18–39</option>
-        <option value="40-49">40–49</option>
-        <option value="50-59">50–59</option>
-        <option value="60-69">60–69</option>
-        <option value="70+">70+</option>
-      </select>
+      <!-- Numeric Age -->
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age" min="18" max="100" required>
 
       <label for="familyHistory">Family history of lung cancer?</label>
       <select id="familyHistory" name="familyHistory" required>
@@ -43,9 +37,7 @@
       <label for="secondhand">Are you regularly exposed to secondhand smoke?</label>
       <select id="secondhand" name="secondhand" required>
         <option value="">Select...</option>
-        <option value="home">Yes, at home</option>
-        <option value="work">Yes, at work or school</option>
-        <option value="other">Yes, in other places</option>
+        <option value="yes">Yes</option>
         <option value="no">No</option>
         <option value="unsure">Unsure</option>
       </select>
@@ -58,7 +50,7 @@
         <option value="never">Never</option>
       </select>
 
-      <!-- Section 2 (smokers/former) -->
+      <!-- Section 2 (only for current/former smokers) -->
       <div id="smokingDetails" style="display:none;">
         <h2>Section 2 of 2: Smoking Details</h2>
 
