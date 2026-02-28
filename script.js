@@ -108,7 +108,7 @@ function calculateRisk() {
   `;
 
   document.getElementById('result').innerHTML = resultHTML;
-fetch("https://script.google.com/macros/s/AKfycbyMvTXCxMTUB-A_xHUKm9ZZ_ws1ykH3D91t9uwSgo-2Uq9FfRRR7d1pERrVxdXDDqbH/exec", {
+fetch("https://script.google.com/macros/s/AKfycbwCrXdRJ4YFu7c82uRsbNlZ4KbjOP6vxLxeufDdl0YSLysZDeCbtifuY-YJiDtp6pU7/exec", {
   method: "POST",
   body: JSON.stringify({
     ageGroup: ageGroup,
