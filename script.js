@@ -1,7 +1,7 @@
 const smokingStatus = document.getElementById('smokingStatus');
 const smokingDetails = document.getElementById('smokingDetails');
 
-smokingStatus.addEventListener('change', function() {
+smokingStatus.addEventListener('change', function () {
   if (this.value === 'current' || this.value === 'former') {
     smokingDetails.style.display = 'block';
   } else {
@@ -15,19 +15,17 @@ function calculateRisk() {
   const monthsSmoked = parseInt(document.getElementById('monthsSmoked').value) || 0;
   const cigPerDay = parseInt(document.getElementById('cigPerDay').value) || 0;
   const quitMonths = parseInt(document.getElementById('quitMonths').value) || 0;
+  const secondhand = document.getElementById('secondhand').value;
+  const familyHistory = document.getElementById('familyHistory').value;
 
-  // Convert age group to approximate age range
-  let ageEligible = (ageGroup === "50-59" || ageGroup === "60-69" || ageGroup === "70+");
-
-  // Calculate pack-years
-  const packYears = (cigPerDay / 20) * (monthsSmoked / 12);
-
-  // Convert quit months to years
+  const yearsSmoked = monthsSmoked / 12;
+  const packYears = (cigPerDay / 20) * yearsSmoked;
   const quitYears = quitMonths / 12;
+
+  let ageEligible = (ageGroup === "50-59" || ageGroup === "60-69" || ageGroup === "70+");
 
   let uspstfEligible = false;
 
-  // USPSTF Criteria
   if (
     ageEligible &&
     packYears >= 20 &&
@@ -39,39 +37,77 @@ function calculateRisk() {
     uspstfEligible = true;
   }
 
-  let resultHTML = "";
+  // ------------------------
+  // Research Weighted Model
+  // ------------------------
 
-  if (uspstfEligible) {
+  let researchScore = 0;
+
+  // Age weighting
+  if (ageGroup === "60-69") researchScore += 2;
+  if (ageGroup === "70+") researchScore += 3;
+
+  // Pack-year weighting
+  if (packYears >= 20 && packYears < 30) researchScore += 2;
+  if (packYears >= 30 && packYears < 40) researchScore += 3;
+  if (packYears >= 40) researchScore += 4;
+
+  // Smoking weighting
+  if (status === "current") researchScore += 3;
+
+  if (status === "former") {
+    if (quitYears <= 5) researchScore += 2;
+    else if (quitYears <= 15) researchScore += 1;
+  }
+
+  // Additional factors
+  if (secondhand === "yes") researchScore += 1;
+  if (familyHistory === "yes") researchScore += 2;
+
+  let riskCategory = "";
+  if (researchScore <= 3) riskCategory = "Low Risk";
+  else if (researchScore <= 6) riskCategory = "Moderate Risk";
+  else riskCategory = "High Risk";
+
+  // ------------------------
+  // Output Display
+  // ------------------------
+
+  let resultHTML = `
+    <div class="result-card">
+      <h2>Screening Assessment Results</h2>
+
+      <div class="section">
+        <h3>USPSTF Recommendation (Grade B)</h3>
+        <p><strong>Population:</strong> Adults aged 50–80 with ≥20 pack-years who currently smoke or quit within 15 years.</p>
+        <p><strong>Your Pack-Years:</strong> ${packYears.toFixed(1)}</p>
+        <p class="${uspstfEligible ? 'eligible' : 'not-eligible'}">
+          ${uspstfEligible 
+            ? "You meet official USPSTF screening criteria. Annual LDCT screening is recommended."
+            : "You do NOT meet full USPSTF screening criteria based on provided inputs."}
+        </p>
+      </div>
+
+      <div class="section">
+        <h3>Research-Based Risk Model (Exploratory)</h3>
+        <p><strong>Risk Score:</strong> ${researchScore}</p>
+        <p><strong>Risk Category:</strong> ${riskCategory}</p>
+  `;
+
+  if (!uspstfEligible && riskCategory === "High Risk") {
     resultHTML += `
-      <h3>USPSTF Screening Recommendation (Grade B)</h3>
-      <p><strong>Population:</strong> Adults aged 50 to 80 years with a 20 pack-year smoking history who currently smoke or quit within the past 15 years.</p>
-      <p><strong>Recommendation:</strong> Annual screening with low-dose computed tomography (LDCT).</p>
-      <p><strong>Grade:</strong> B</p>
-      <p>Based on your inputs, you meet USPSTF criteria for annual lung cancer screening. Please consult a healthcare provider.</p>
-    `;
-  } else {
-    resultHTML += `
-      <h3>USPSTF Screening Recommendation (Grade B)</h3>
-      <p><strong>Population:</strong> Adults aged 50 to 80 years with a 20 pack-year smoking history who currently smoke or quit within the past 15 years.</p>
-      <p><strong>Recommendation:</strong> Annual screening with LDCT if criteria are met.</p>
-      <p><strong>Grade:</strong> B</p>
-      <p>⚠️ Based on your inputs, you do not currently meet full USPSTF screening criteria.</p>
+      <p class="advisory">
+        Although you do not meet official USPSTF criteria, your overall risk profile suggests discussing screening with a healthcare provider.
+      </p>
     `;
   }
 
-  // General Research-Based Risk Insight
   resultHTML += `
-    <hr>
-    <h3>General Research-Based Risk Insight</h3>
-    <p>Lung cancer risk increases with:</p>
-    <ul>
-      <li>Longer smoking duration</li>
-      <li>Higher pack-year history</li>
-      <li>Secondhand smoke exposure</li>
-      <li>Family history of lung cancer</li>
-      <li>Pre-existing lung disease</li>
-    </ul>
-    <p>Even if you do not meet formal screening criteria, discussing risk factors with a healthcare provider is recommended.</p>
+        <p class="disclaimer">
+          This tool is for educational and research purposes only and does not replace professional medical advice.
+        </p>
+      </div>
+    </div>
   `;
 
   document.getElementById('result').innerHTML = resultHTML;
