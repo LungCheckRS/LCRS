@@ -107,7 +107,7 @@ function calculateRisk() {
   // ------------------------
 // Send to Google Sheet
 // ------------------------
-fetch("https://script.google.com/macros/s/AKfycbyceG5sW8m6rQPImZQ8JakKtYlNizY8PTYXUzJHxY00UVCR51ZNDhG41-mWnKC96m6J/exec", {
+fetch("https://script.google.com/macros/s/AKfycbwO2ML_NjneVR8NnoYXKETC8npec5bjq1Y4S7EV7p93Ti3prjr7fcRzRboVnHGPSDUU/exec", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
