@@ -107,20 +107,28 @@ function calculateRisk() {
   // ------------------------
   // Send to Google Sheet
   // ------------------------
-  fetch("https://script.google.com/macros/s/AKfycbwo-VjCMqnCIqLpVdz4gusHthplvQQXisjZPS5ymJwPE2E7C47wWo07EwnJRd3Ti2zH/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      age: age,
-      smokingStatus: status,
-      yearsSmoked: yearsSmoked,
-      cigPerDay: cigPerDay,
-      quitYears: quitYears,
-      packYears: packYears.toFixed(1),
-      uspstfEligible: uspstfEligible,
-      researchScore: researchScore,
-      riskCategory: riskCategory,
-      secondhand: secondhand,
-      familyHistory: familyHistory
+  fetch("https://script.google.com/macros/s/AKfycbyceG5sW8m6rQPImZQ8JakKtYlNizY8PTYXUzJHxY00UVCR51ZNDhG41-mWnKC96m6J/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    age: age,
+    smokingStatus: status,
+    yearsSmoked: yearsSmoked,
+    cigPerDay: cigPerDay,
+    quitYears: quitYears,
+    packYears: packYears.toFixed(1),
+    uspstfEligible: uspstfEligible,
+    researchScore: researchScore,
+    riskCategory: riskCategory,
+    secondhand: secondhand,
+    familyHistory: familyHistory
+  })
+})
+.then(response => response.json())
+.then(data => console.log("Google Sheet response:", data))
+.catch(error => console.error("Error saving to sheet:", error));
     })
   })
   .then(response => console.log("Saved to sheet"))
