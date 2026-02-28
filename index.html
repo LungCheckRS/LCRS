@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCRS - Lung Cancer Risk Stratifier</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>LCRS - Lung Cancer Risk Stratifier</h1>
+    <p>This survey is for educational purposes only. LCRS is not a diagnostic tool. Please consult a healthcare provider for medical advice. Responses are anonymous.</p>
+
+    <form id="riskForm">
+
+      <h2>Section 1 of 2: General Info</h2>
+
+      <label for="email">Email (optional for follow-up):</label>
+      <input type="email" id="email" name="email">
+
+      <label for="ageGroup">Age Group:</label>
+      <select id="ageGroup" name="ageGroup" required>
+        <option value="">Select...</option>
+        <option value="18-39">18–39</option>
+        <option value="40-49">40–49</option>
+        <option value="50-59">50–59</option>
+        <option value="60-69">60–69</option>
+        <option value="70+">70+</option>
+      </select>
+
+      <label for="weight">Weight (lbs):</label>
+      <input type="number" id="weight" name="weight" min="50" max="600" required>
+
+      <label for="height">Height (inches):</label>
+      <input type="number" id="height" name="height" min="48" max="84" required>
+
+      <label for="familyHistory">Family history of lung cancer?</label>
+      <select id="familyHistory" name="familyHistory" required>
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+        <option value="maybe">Maybe</option>
+      </select>
+
+      <label for="preExisting">Pre-existing lung disease?</label>
+      <select id="preExisting" name="preExisting" required>
+        <option value="">Select...</option>
+        <option value="no">No</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="secondhand">Are you regularly exposed to secondhand smoke?</label>
+      <select id="secondhand" name="secondhand" required>
+        <option value="">Select...</option>
+        <option value="home">Yes, at home</option>
+        <option value="work">Yes, at work or school</option>
+        <option value="other">Yes, in other places</option>
+        <option value="no">No</option>
+        <option value="unsure">Unsure</option>
+      </select>
+
+      <label for="smokingStatus">Smoking Status:</label>
+      <select id="smokingStatus" name="smokingStatus" required>
+        <option value="">Select...</option>
+        <option value="current">Current</option>
+        <option value="former">Former</option>
+        <option value="never">Never</option>
+      </select>
+
+      <!-- Section 2 (smokers/former) -->
+      <div id="smokingDetails" style="display:none;">
+        <h2>Section 2 of 2: Smoking Details</h2>
+
+        <label for="smokeType">What do/did you smoke?</label>
+        <select id="smokeType" name="smokeType">
+          <option value="">Select...</option>
+          <option value="cigarettes">Cigarettes</option>
+          <option value="vape">Vape</option>
+          <option value="cigars">Cigars</option>
+          <option value="ecigarettes">E-cigarettes</option>
+          <option value="pipe">Pipe</option>
+          <option value="other">Other</option>
+        </select>
+
+        <label for="monthsSmoked">How many months have you smoked?</label>
+        <input type="number" id="monthsSmoked" name="monthsSmoked" min="0">
+
+        <label for="cigPerDay">How many cigarettes per day? (0 if not applicable)</label>
+        <input type="number" id="cigPerDay" name="cigPerDay" min="0">
+
+        <label for="quitMonths">How long ago did you quit? (months, 0 if not applicable)</label>
+        <input type="number" id="quitMonths" name="quitMonths" min="0">
+      </div>
+
+      <button type="button" onclick="calculateRisk()">Check Eligibility</button>
+    </form>
+
+    <div id="result"></div>
+
+    <p>Submit your responses in the <a href="https://forms.gle/MnyCYXtz7QhBzj9f9" target="_blank">LCRS Pilot Survey</a> to record your data.</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
