@@ -12,16 +12,13 @@ smokingStatus.addEventListener('change', function () {
 function calculateRisk() {
   const ageGroup = document.getElementById('ageGroup').value;
   const status = document.getElementById('smokingStatus').value;
-  const monthsSmoked = parseInt(document.getElementById('monthsSmoked').value) || 0;
+  const yearsSmoked = parseFloat(document.getElementById('yearsSmoked').value) || 0;
   const cigPerDay = parseInt(document.getElementById('cigPerDay').value) || 0;
-  const quitMonths = parseInt(document.getElementById('quitMonths').value) || 0;
+  const quitYears = parseFloat(document.getElementById('quitYears').value) || 0;  
   const secondhand = document.getElementById('secondhand').value;
   const familyHistory = document.getElementById('familyHistory').value;
 
-  const yearsSmoked = monthsSmoked / 12;
   const packYears = (cigPerDay / 20) * yearsSmoked;
-  const quitYears = quitMonths / 12;
-
   let ageEligible = (ageGroup === "50-59" || ageGroup === "60-69" || ageGroup === "70+");
 
   let uspstfEligible = false;
