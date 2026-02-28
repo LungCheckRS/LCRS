@@ -105,9 +105,9 @@ function calculateRisk() {
   document.getElementById('result').innerHTML = resultHTML;
 
   // ------------------------
-  // Send to Google Sheet
-  // ------------------------
-  fetch("https://script.google.com/macros/s/AKfycbyceG5sW8m6rQPImZQ8JakKtYlNizY8PTYXUzJHxY00UVCR51ZNDhG41-mWnKC96m6J/exec", {
+// Send to Google Sheet
+// ------------------------
+fetch("https://script.google.com/macros/s/AKfycbyceG5sW8m6rQPImZQ8JakKtYlNizY8PTYXUzJHxY00UVCR51ZNDhG41-mWnKC96m6J/exec", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -126,11 +126,7 @@ function calculateRisk() {
     familyHistory: familyHistory
   })
 })
-.then(response => response.json())
+.then(response => response.text()) // <- use .text() instead of .json()
 .then(data => console.log("Google Sheet response:", data))
 .catch(error => console.error("Error saving to sheet:", error));
-    })
-  })
-  .then(response => console.log("Saved to sheet"))
-  .catch(error => console.error("Error:", error));
-}
+  }
