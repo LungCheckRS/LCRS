@@ -1,3 +1,6 @@
+// ------------------------
+// Show/hide smoking details
+// ------------------------
 const smokingStatus = document.getElementById('smokingStatus');
 const smokingDetails = document.getElementById('smokingDetails');
 
@@ -9,8 +12,12 @@ smokingStatus.addEventListener('change', function () {
   }
 });
 
+// ------------------------
+// Calculate Risk
+// ------------------------
 function calculateRisk() {
-  const ageGroup = document.getElementById('ageGroup').value;
+  // Get inputs
+  const age = parseInt(document.getElementById('age').value) || 0;
   const status = document.getElementById('smokingStatus').value;
   const yearsSmoked = parseFloat(document.getElementById('yearsSmoked').value) || 0;
   const cigPerDay = parseInt(document.getElementById('cigPerDay').value) || 0;
@@ -18,18 +25,15 @@ function calculateRisk() {
   const secondhand = document.getElementById('secondhand').value;
   const familyHistory = document.getElementById('familyHistory').value;
 
+  // Calculate pack-years
   const packYears = (cigPerDay / 20) * yearsSmoked;
-  let ageEligible = (ageGroup === "50-59" || ageGroup === "60-69" || ageGroup === "70+");
 
+  // USPSTF eligibility
   let uspstfEligible = false;
-
   if (
-    ageEligible &&
+    age >= 50 && age <= 80 &&
     packYears >= 20 &&
-    (
-      status === "current" ||
-      (status === "former" && quitYears <= 15)
-    )
+    (status === "current" || (status === "former" && quitYears <= 15))
   ) {
     uspstfEligible = true;
   }
@@ -37,21 +41,19 @@ function calculateRisk() {
   // ------------------------
   // Research Weighted Model
   // ------------------------
-
   let researchScore = 0;
 
   // Age weighting
-  if (ageGroup === "60-69") researchScore += 2;
-  if (ageGroup === "70+") researchScore += 3;
+  if (age >= 60 && age <= 69) researchScore += 2;
+  if (age >= 70) researchScore += 3;
 
   // Pack-year weighting
   if (packYears >= 20 && packYears < 30) researchScore += 2;
-  if (packYears >= 30 && packYears < 40) researchScore += 3;
-  if (packYears >= 40) researchScore += 4;
+  else if (packYears >= 30 && packYears < 40) researchScore += 3;
+  else if (packYears >= 40) researchScore += 4;
 
   // Smoking weighting
   if (status === "current") researchScore += 3;
-
   if (status === "former") {
     if (quitYears <= 5) researchScore += 2;
     else if (quitYears <= 15) researchScore += 1;
@@ -61,15 +63,15 @@ function calculateRisk() {
   if (secondhand === "yes") researchScore += 1;
   if (familyHistory === "yes") researchScore += 2;
 
+  // Risk category
   let riskCategory = "";
   if (researchScore <= 3) riskCategory = "Low Risk";
   else if (researchScore <= 6) riskCategory = "Moderate Risk";
   else riskCategory = "High Risk";
 
   // ------------------------
-  // Output Display
+  // Display Results
   // ------------------------
-
   let resultHTML = `
     <div class="result-card">
       <h2>Screening Assessment Results</h2>
@@ -108,21 +110,26 @@ function calculateRisk() {
   `;
 
   document.getElementById('result').innerHTML = resultHTML;
-fetch("https://script.google.com/macros/s/AKfycbwCrXdRJ4YFu7c82uRsbNlZ4KbjOP6vxLxeufDdl0YSLysZDeCbtifuY-YJiDtp6pU7/exec", {
-  method: "POST",
-  body: JSON.stringify({
-    ageGroup: ageGroup,
-    smokingStatus: status,
-    yearsSmoked: yearsSmoked,
-    cigPerDay: cigPerDay,
-    quitYears: quitYears,
-    packYears: packYears.toFixed(1),
-    uspstfEligible: uspstfEligible,
-    researchScore: researchScore,
-    riskCategory: riskCategory,
-    secondhand: secondhand,
-    familyHistory: familyHistory
+
+  // ------------------------
+  // Send data to Google Sheets
+  // ------------------------
+  fetch("YOUR_WEB_APP_URL_HERE", {
+    method: "POST",
+    body: JSON.stringify({
+      age: age,
+      smokingStatus: status,
+      yearsSmoked: yearsSmoked,
+      cigPerDay: cigPerDay,
+      quitYears: quitYears,
+      packYears: packYears.toFixed(1),
+      uspstfEligible: uspstfEligible,
+      researchScore: researchScore,
+      riskCategory: riskCategory,
+      secondhand: secondhand,
+      familyHistory: familyHistory
+    })
   })
-})
-.then(response => console.log("Saved to sheet"))
-.catch(error => console.error("Error:", error));}
+  .then(response => console.log("Saved to sheet"))
+  .catch(error => console.error("Error:", error));
+}
