@@ -85,7 +85,7 @@ function calculateRisk() {
   document.getElementById('result').innerHTML = resultHTML;
 
   // Send data to Google Sheet via Apps Script Web App
-  fetch("YOUR_WEB_APP_URL_HERE", {
+  fetch("https://script.google.com/macros/s/AKfycbw4_VCa_NNGZWl5PRf3LQweOEDRYkeZIyabYP4vO3LhjZUMCwm-qbb6BP8E5cDy1lQ/exec", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
