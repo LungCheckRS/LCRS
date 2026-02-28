@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('result').innerHTML = resultHTML;
 
     // ---------- Send to Google Sheets ----------
-    fetch("https://script.google.com/macros/s/AKfycbxjsYh4gL6CjIb3fv-t2sBdgpHf6VdJ7j8cdePYni1xlx4aRKRExlLOACL4imzqfawxSQ/exec", {  
+    fetch("https://script.google.com/macros/s/AKfycbyRvk_ntJbsYzGjwPVpSexJcC8maXzUlTOFwf0zWQoUJAuGE-_2tNTDrNFuRS4nEktFzA/exec", {  
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
