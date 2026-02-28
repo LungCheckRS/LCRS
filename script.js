@@ -126,7 +126,6 @@ fetch("https://script.google.com/macros/s/AKfycbyceG5sW8m6rQPImZQ8JakKtYlNizY8PT
     familyHistory: familyHistory
   })
 })
-.then(response => response.text()) // <- use .text() instead of .json()
+.then(response => response.json())
 .then(data => console.log("Google Sheet response:", data))
 .catch(error => console.error("Error saving to sheet:", error));
-  }
