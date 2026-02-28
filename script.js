@@ -111,4 +111,21 @@ function calculateRisk() {
   `;
 
   document.getElementById('result').innerHTML = resultHTML;
-}
+fetch("https://script.google.com/macros/s/AKfycbxPMFGzfPcnauOkZZU72tuZzlT3FgKAD3xnupI8BkyxA657Vdvj3QAiVoMEJ26ItNzR/exec", {
+  method: "POST",
+  body: JSON.stringify({
+    ageGroup: ageGroup,
+    smokingStatus: status,
+    monthsSmoked: monthsSmoked,
+    cigPerDay: cigPerDay,
+    quitMonths: quitMonths,
+    packYears: packYears.toFixed(1),
+    uspstfEligible: uspstfEligible,
+    researchScore: researchScore,
+    riskCategory: riskCategory,
+    secondhand: secondhand,
+    familyHistory: familyHistory
+  })
+})
+.then(response => console.log("Saved to sheet"))
+.catch(error => console.error("Error:", error));}
