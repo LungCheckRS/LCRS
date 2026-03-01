@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------- Send to Google Sheets ----------
     fetch("https://script.google.com/macros/s/AKfycbyOsDnxmpTaatr_xZnz3lHTlyNXszVN3dGGv_SXY6bjIOw4l4rJPwtUiufqvi3hq357XQ/exec", {  
       method: "POST",
+      mode: "no-cors",
       body: JSON.stringify({
         age: age,
         familyHistory: familyHistory,
@@ -131,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         riskCategory: riskCategory
       })
     })
-    .then(response => response.text())
     .then(data => console.log("Google Sheet response:", data))
     .catch(error => console.error("Error saving to sheet:", error));
   };
