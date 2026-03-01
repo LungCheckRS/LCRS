@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         familyHistory: familyHistory,
         preExisting: preExisting,
         secondhand: secondhand,
-        smokingStatus: status,
+        smokingStatus: smokingStatus,
         smokeType: smokeType,
         yearsSmoked: yearsSmoked,
         cigPerDay: cigPerDay,
