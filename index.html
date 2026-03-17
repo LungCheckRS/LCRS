@@ -2,87 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LCRS - Lung Cancer Risk Stratifier</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Lung Cancer Screening Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      font-size: 16px;
+      width: 100%;
+    }
+    #result {
+      margin-top: 25px;
+      font-weight: bold;
+      font-size: 18px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>LCRS - Lung Cancer Risk Stratifier</h1>
-    <p>This survey is for educational purposes only. LCRS is not a diagnostic tool. Please consult a healthcare provider for medical advice. Responses are anonymous.</p>
 
-    <form id="riskForm">
+<h1>Lung Cancer Screening Eligibility Checker</h1>
 
-      <h2>Section 1 of 2: General Info</h2>
+<p>
+This tool uses guidelines from the U.S. Preventive Services Task Force (USPSTF). 
+This is not a medical diagnosis.
+</p>
 
-      <!-- Numeric Age -->
-      <label for="age">Age (years):</label>
-<input type="number" id="age" name="age" min="18" max="120" required>
+<label>Age:</label>
+<input type="number" id="age">
 
-      <label for="familyHistory">Family history of lung cancer?</label>
-      <select id="familyHistory" name="familyHistory" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-        <option value="maybe">Maybe</option>
-      </select>
+<label>Smoking Status:</label>
+<select id="smokeStatus">
+  <option value="never">Never smoked</option>
+  <option value="current">Current smoker</option>
+  <option value="former">Former smoker</option>
+</select>
 
-      <label for="preExisting">Pre-existing lung disease?</label>
-      <select id="preExisting" name="preExisting" required>
-        <option value="">Select...</option>
-        <option value="no">No</option>
-        <option value="yes">Yes</option>
-      </select>
+<label>Years smoked:</label>
+<input type="number" id="years">
 
-      <label for="secondhand">Are you regularly exposed to secondhand smoke?</label>
-      <select id="secondhand" name="secondhand" required>
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-        <option value="unsure">Unsure</option>
-      </select>
+<label>Cigarettes per day:</label>
+<input type="number" id="cigs">
 
-      <label for="smokingStatus">Smoking Status:</label>
-      <select id="smokingStatus" name="smokingStatus" required>
-        <option value="">Select...</option>
-        <option value="current">Current</option>
-        <option value="former">Former</option>
-        <option value="never">Never</option>
-      </select>
+<label>If you quit, how many years ago?</label>
+<input type="number" id="quitYears" placeholder="0 if still smoking">
 
-      <!-- Section 2 (only for current/former smokers) -->
-      <div id="smokingDetails" style="display:none;">
-        <h2>Section 2 of 2: Smoking Details</h2>
+<label>Country:</label>
+<input type="text" id="country" placeholder="e.g., United States, India, UK">
 
-        <label for="smokeType">What do/did you smoke?</label>
-        <select id="smokeType" name="smokeType">
-          <option value="">Select...</option>
-          <option value="cigarettes">Cigarettes</option>
-          <option value="vape">Vape</option>
-          <option value="cigars">Cigars</option>
-          <option value="ecigarettes">E-cigarettes</option>
-          <option value="pipe">Pipe</option>
-          <option value="other">Other</option>
-        </select>
+<label>Type of Area:</label>
+<select id="areaType">
+  <option>Urban</option>
+  <option>Suburban</option>
+  <option>Rural</option>
+</select>
 
-        <label for="yearsSmoked">How many years have you smoked?</label>
-        <input type="number" id="yearsSmoked" name="yearsSmoked" min="0">
+<label>Do you have access to a primary care provider?</label>
+<select id="access">
+  <option>Yes</option>
+  <option>No</option>
+  <option>Not sure</option>
+</select>
 
-        <label for="cigPerDay">How many cigarettes per day? (0 if not applicable)</label>
-        <input type="number" id="cigPerDay" name="cigPerDay" min="0">
+<button onclick="checkEligibility()">Check Eligibility</button>
 
-        <label for="quitYears">How long ago did you quit? (years, 0 if not applicable)</label>
-        <input type="number" id="quitYears" name="quitYears" min="0">
-      </div>
+<div id="result"></div>
 
-      <button type="button" onclick="calculateRisk()">Check Eligibility</button>
-    </form>
+<script>
+function checkEligibility() {
+  let age = parseInt(document.getElementById("age").value);
+  let status = document.getElementById("smokeStatus").value;
+  let years = parseFloat(document.getElementById("years").value);
+  let cigs = parseFloat(document.getElementById("cigs").value);
+  let quitYears = parseFloat(document.getElementById("quitYears").value);
 
-    <div id="result"></div>
+  let country = document.getElementById("country").value;
+  let areaType = document.getElementById("areaType").value;
+  let access = document.getElementById("access").value;
 
-    <p>Submit your responses in the <a href="https://forms.gle/MnyCYXtz7QhBzj9f9" target="_blank">LCRS Pilot Survey</a> to record your data.</p>
-  </div>
+  let packsPerDay = cigs / 20;
+  let packYears = years * packsPerDay;
 
-  <script src="script.js"></script>
+  let eligible = false;
+
+  if (
+    age >= 50 && age <= 80 &&
+    packYears >= 20 &&
+    (status === "current" || (status === "former" && quitYears <= 15))
+  ) {
+    eligible = true;
+  }
+
+  let resultDiv = document.getElementById("result");
+
+  if (eligible) {
+    resultDiv.style.backgroundColor = "#d4edda";
+    resultDiv.innerHTML = `
+      ✅ You may be eligible for lung cancer screening (LDCT).<br><br>
+      <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
+      <strong>Country:</strong> ${country || "Not provided"}<br>
+      <strong>Area Type:</strong> ${areaType}<br>
+      <strong>Primary Care Access:</strong> ${access}<br><br>
+      Early detection has been shown to reduce lung cancer mortality by ~20% in high-risk individuals.<br><br>
+      <em>This assessment is based on U.S. screening guidelines and may vary by country. Please consult a healthcare provider.</em>
+    `;
+  } else {
+    resultDiv.style.backgroundColor = "#f8d7da";
+    resultDiv.innerHTML = `
+      ❌ You may not meet current screening criteria.<br><br>
+      <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
+      <strong>Country:</strong> ${country || "Not provided"}<br>
+      <strong>Area Type:</strong> ${areaType}<br>
+      <strong>Primary Care Access:</strong> ${access}<br><br>
+      <em>This assessment is based on U.S. screening guidelines and may vary by country. If you have concerns, consult a healthcare provider.</em>
+    `;
+  }
+}
+</script>
+
 </body>
 </html>
