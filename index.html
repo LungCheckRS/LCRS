@@ -4,34 +4,86 @@
   <meta charset="UTF-8">
   <title>Lung Cancer Screening Tool</title>
   <style>
+    /* Body styling */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #f0f4f8, #d9e2ec);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    /* Container card */
+    .container {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      margin: 40px 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       max-width: 650px;
-      margin: 40px auto;
-      padding: 20px;
+      width: 100%;
     }
+
     h1 {
+      text-align: center;
       color: #2c3e50;
+      margin-bottom: 20px;
     }
+
+    p {
+      font-size: 0.95rem;
+      color: #555;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
     label {
       display: block;
       margin-top: 15px;
+      font-weight: 500;
+      color: #333;
     }
+
     input, select {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: border-color 0.2s;
     }
+
+    input:focus, select:focus {
+      border-color: #4a90e2;
+      outline: none;
+    }
+
     button {
-      margin-top: 20px;
+      margin-top: 25px;
       padding: 12px;
-      font-size: 16px;
       width: 100%;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #4a90e2;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
     }
+
+    button:hover {
+      background-color: #357ABD;
+    }
+
     #result {
       margin-top: 25px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 1rem;
       padding: 15px;
       border-radius: 8px;
     }
@@ -39,52 +91,50 @@
 </head>
 <body>
 
-<h1>Lung Cancer Screening Eligibility Checker</h1>
+<div class="container">
+  <h1>Lung Cancer Screening Tool</h1>
+  <p>This tool uses USPSTF guidelines. Not a medical diagnosis. Consult a healthcare provider for clinical decisions.</p>
 
-<p>
-This tool uses guidelines from the U.S. Preventive Services Task Force (USPSTF). 
-This is not a medical diagnosis.
-</p>
+  <label>Age:</label>
+  <input type="number" id="age">
 
-<label>Age:</label>
-<input type="number" id="age">
+  <label>Smoking Status:</label>
+  <select id="smokeStatus">
+    <option value="never">Never smoked</option>
+    <option value="current">Current smoker</option>
+    <option value="former">Former smoker</option>
+  </select>
 
-<label>Smoking Status:</label>
-<select id="smokeStatus">
-  <option value="never">Never smoked</option>
-  <option value="current">Current smoker</option>
-  <option value="former">Former smoker</option>
-</select>
+  <label>Years smoked:</label>
+  <input type="number" id="years">
 
-<label>Years smoked:</label>
-<input type="number" id="years">
+  <label>Cigarettes per day:</label>
+  <input type="number" id="cigs">
 
-<label>Cigarettes per day:</label>
-<input type="number" id="cigs">
+  <label>If you quit, how many years ago?</label>
+  <input type="number" id="quitYears" placeholder="0 if still smoking">
 
-<label>If you quit, how many years ago?</label>
-<input type="number" id="quitYears" placeholder="0 if still smoking">
+  <label>Country:</label>
+  <input type="text" id="country" placeholder="e.g., United States, India, UK">
 
-<label>Country:</label>
-<input type="text" id="country" placeholder="e.g., United States, India, UK">
+  <label>Type of Area:</label>
+  <select id="areaType">
+    <option>Urban</option>
+    <option>Suburban</option>
+    <option>Rural</option>
+  </select>
 
-<label>Type of Area:</label>
-<select id="areaType">
-  <option>Urban</option>
-  <option>Suburban</option>
-  <option>Rural</option>
-</select>
+  <label>Do you have access to a primary care provider?</label>
+  <select id="access">
+    <option>Yes</option>
+    <option>No</option>
+    <option>Not sure</option>
+  </select>
 
-<label>Do you have access to a primary care provider?</label>
-<select id="access">
-  <option>Yes</option>
-  <option>No</option>
-  <option>Not sure</option>
-</select>
+  <button onclick="checkEligibility()">Check Eligibility</button>
 
-<button onclick="checkEligibility()">Check Eligibility</button>
-
-<div id="result"></div>
+  <div id="result"></div>
+</div>
 
 <script>
 function checkEligibility() {
@@ -115,24 +165,26 @@ function checkEligibility() {
 
   if (eligible) {
     resultDiv.style.backgroundColor = "#d4edda";
+    resultDiv.style.color = "#155724";
     resultDiv.innerHTML = `
       ✅ You may be eligible for lung cancer screening (LDCT).<br><br>
       <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
       <strong>Country:</strong> ${country || "Not provided"}<br>
       <strong>Area Type:</strong> ${areaType}<br>
       <strong>Primary Care Access:</strong> ${access}<br><br>
-      Early detection has been shown to reduce lung cancer mortality by ~20% in high-risk individuals.<br><br>
-      <em>This assessment is based on U.S. screening guidelines and may vary by country. Please consult a healthcare provider.</em>
+      Early detection reduces mortality by ~20% in high-risk individuals.<br><br>
+      <em>This assessment is based on U.S. screening guidelines and may vary by country.</em>
     `;
   } else {
     resultDiv.style.backgroundColor = "#f8d7da";
+    resultDiv.style.color = "#721c24";
     resultDiv.innerHTML = `
       ❌ You may not meet current screening criteria.<br><br>
       <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
       <strong>Country:</strong> ${country || "Not provided"}<br>
       <strong>Area Type:</strong> ${areaType}<br>
       <strong>Primary Care Access:</strong> ${access}<br><br>
-      <em>This assessment is based on U.S. screening guidelines and may vary by country. If you have concerns, consult a healthcare provider.</em>
+      <em>This assessment is based on U.S. screening guidelines and may vary by country. Consult a healthcare provider for guidance.</em>
     `;
   }
 }
