@@ -114,16 +114,25 @@
   <label>If you quit, how many years ago?</label>
   <input type="number" id="quitYears" placeholder="0 if still smoking">
 
-  <label>Country:</label>
-  <input type="text" id="country" placeholder="e.g., United States, India, UK">
+<label>Country:</label>
+<select id="country">
+  <option value="">Select Country</option>
+  <option>United States</option>
+  <option>India</option>
+  <option>UK</option>
+  <option>Other</option>
+</select>
 
-  <label>Type of Area:</label>
-  <select id="areaType">
-    <option>Urban</option>
-    <option>Suburban</option>
-    <option>Rural</option>
-  </select>
+<label>State / Province / Region:</label>
+<input type="text" id="region" placeholder="e.g., Texas, Maharashtra, London">
 
+<label>Type of Area:</label>
+<select id="areaType">
+  <option>Urban</option>
+  <option>Suburban</option>
+  <option>Rural</option>
+</select>
+  
   <label>Do you have access to a primary care provider?</label>
   <select id="access">
     <option>Yes</option>
