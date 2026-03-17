@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Lung Cancer Screening Tool</title>
   <style>
-    /* Body styling */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to bottom right, #f0f4f8, #d9e2ec);
@@ -16,7 +15,6 @@
       min-height: 100vh;
     }
 
-    /* Container card */
     .container {
       background-color: #ffffff;
       border-radius: 12px;
@@ -114,18 +112,18 @@
   <label>If you quit, how many years ago?</label>
   <input type="number" id="quitYears" placeholder="0 if still smoking">
 
-<label>Country:</label>
-<input type="text" id="region" placeholder="e.g., United States, India, UK">
+  <label>Country:</label>
+  <input type="text" id="country" placeholder="e.g., United States, India, UK">
 
-<label>State / Province / Region:</label>
-<input type="text" id="region" placeholder="e.g., Texas, Maharashtra, London">
+  <label>State / Province / Region:</label>
+  <input type="text" id="region" placeholder="e.g., Texas, Maharashtra, London">
 
-<label>Type of Area:</label>
-<select id="areaType">
-  <option>Urban</option>
-  <option>Suburban</option>
-  <option>Rural</option>
-</select>
+  <label>Type of Area:</label>
+  <select id="areaType">
+    <option>Urban</option>
+    <option>Suburban</option>
+    <option>Rural</option>
+  </select>
   
   <label>Do you have access to a primary care provider?</label>
   <select id="access">
@@ -140,57 +138,77 @@
 </div>
 
 <script>
-function checkEligibility() {
-  let age = parseInt(document.getElementById("age").value);
-  let status = document.getElementById("smokeStatus").value;
-  let years = parseFloat(document.getElementById("years").value);
-  let cigs = parseFloat(document.getElementById("cigs").value);
-  let quitYears = parseFloat(document.getElementById("quitYears").value);
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbwZoXnGSKw8RT_MetanClJu_n5w3ibGPxz2KsTU8_8WrlPckf4fP7TZBaktWX3FiwUM/exec"; // <-- replace this with your Apps Script Web App URL
 
-  let country = document.getElementById("country").value;
-  let areaType = document.getElementById("areaType").value;
-  let access = document.getElementById("access").value;
-
-  let packsPerDay = cigs / 20;
-  let packYears = years * packsPerDay;
-
-  let eligible = false;
-
-  if (
-    age >= 50 && age <= 80 &&
-    packYears >= 20 &&
-    (status === "current" || (status === "former" && quitYears <= 15))
-  ) {
-    eligible = true;
+  function submitToSheet(data) {
+    fetch(SHEET_URL, {
+      method: "POST",
+      body: new URLSearchParams(data)
+    })
+    .then(response => response.text())
+    .then(res => console.log("Submission Success:", res))
+    .catch(err => console.error("Submission Error:", err));
   }
 
-  let resultDiv = document.getElementById("result");
+  function checkEligibility() {
+    let age = parseInt(document.getElementById("age").value);
+    let status = document.getElementById("smokeStatus").value;
+    let years = parseFloat(document.getElementById("years").value);
+    let cigs = parseFloat(document.getElementById("cigs").value);
+    let quitYears = parseFloat(document.getElementById("quitYears").value);
+    let country = document.getElementById("country").value;
+    let region = document.getElementById("region").value;
+    let areaType = document.getElementById("areaType").value;
+    let access = document.getElementById("access").value;
 
-  if (eligible) {
-    resultDiv.style.backgroundColor = "#d4edda";
-    resultDiv.style.color = "#155724";
-    resultDiv.innerHTML = `
-      ✅ You may be eligible for lung cancer screening (LDCT).<br><br>
-      <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
-      <strong>Country:</strong> ${country || "Not provided"}<br>
-      <strong>Area Type:</strong> ${areaType}<br>
-      <strong>Primary Care Access:</strong> ${access}<br><br>
-      Early detection reduces mortality by ~20% in high-risk individuals.<br><br>
-      <em>This assessment is based on U.S. screening guidelines and may vary by country.</em>
-    `;
-  } else {
-    resultDiv.style.backgroundColor = "#f8d7da";
-    resultDiv.style.color = "#721c24";
-    resultDiv.innerHTML = `
-      ❌ You may not meet current screening criteria.<br><br>
-      <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
-      <strong>Country:</strong> ${country || "Not provided"}<br>
-      <strong>Area Type:</strong> ${areaType}<br>
-      <strong>Primary Care Access:</strong> ${access}<br><br>
-      <em>This assessment is based on U.S. screening guidelines and may vary by country. Consult a healthcare provider for guidance.</em>
-    `;
+    let packsPerDay = cigs / 20;
+    let packYears = years * packsPerDay;
+
+    let eligible = (age >=50 && age <=80 && packYears >=20 && (status==="current" || (status==="former" && quitYears <=15))) ? "Yes" : "No";
+
+    let resultDiv = document.getElementById("result");
+
+    if (eligible === "Yes") {
+      resultDiv.style.backgroundColor = "#d4edda";
+      resultDiv.style.color = "#155724";
+      resultDiv.innerHTML = `
+        ✅ You may be eligible for lung cancer screening (LDCT).<br><br>
+        <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
+        <strong>Country:</strong> ${country || "Not provided"}<br>
+        <strong>Region:</strong> ${region || "Not provided"}<br>
+        <strong>Area Type:</strong> ${areaType}<br>
+        <strong>Primary Care Access:</strong> ${access}<br><br>
+        Early detection reduces mortality by ~20% in high-risk individuals.<br><br>
+        <em>This assessment is based on U.S. screening guidelines and may vary by country.</em>
+      `;
+    } else {
+      resultDiv.style.backgroundColor = "#f8d7da";
+      resultDiv.style.color = "#721c24";
+      resultDiv.innerHTML = `
+        ❌ You may not meet current screening criteria.<br><br>
+        <strong>Estimated pack-years:</strong> ${packYears.toFixed(1)}<br>
+        <strong>Country:</strong> ${country || "Not provided"}<br>
+        <strong>Region:</strong> ${region || "Not provided"}<br>
+        <strong>Area Type:</strong> ${areaType}<br>
+        <strong>Primary Care Access:</strong> ${access}<br><br>
+        <em>This assessment is based on U.S. screening guidelines and may vary by country. Consult a healthcare provider for guidance.</em>
+      `;
+    }
+
+    let participantData = {
+      age,
+      status,
+      years,
+      cigs,
+      quitYears,
+      country,
+      region,
+      areaType,
+      access,
+      eligible
+    };
+    submitToSheet(participantData);
   }
-}
 </script>
 
 </body>
